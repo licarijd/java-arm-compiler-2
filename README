@@ -1,0 +1,23 @@
+JTAC (Java to ARM compiler) is a tool that converts basic Java programs directly to ARM.
+This makes it possible to run Java code without having to install JVM, and bypasses the bytecode generation phase.
+
+Components:
+
+1) Initialization file (JTAC.ini). Calls the scanner if a valid Java file is used as input.
+2) Scanner (scanner.py). Scans Java file, creates a sentence, and passes it to parser.py.
+3) Parser (parser.py) calls generator.py. If the sentence from scanner.py is accepted by the Java grammar, pass it to generator.py.
+4) ARM code generator (generator.py). Generates ARM syntax based on Java sentence.
+
+Instructions:
+
+Run the scanner with ./JTAC.ini HelloWorld.java
+Run the parser with "python rdparser.py [input]", where [input] refers to a list of symbols to be passed via command line. This can be changed to take a entire file, which might be better.
+Run the generator with "python generator.py [input]", where [input] refers to a list of symbols. This could be changed to take a file as input, which may be better.
+
+TODO:
+1) Make the scanner pass it's output to parser.
+2) Finish the parser. If a sentence is accepted, pass the input from scanner to generator.py.
+3) Finish generator.py (sample ARM code for a Hello World Java program is in OUT_SAMPLE.txt. Just follow that.
+4) Extend these components to also handle iteration, choice, assignment, and classes/objects/methods.
+5) Complete the grammar in rdparser.py.
+
