@@ -46,15 +46,43 @@ def main():
 			del words[i]
 		
 	words = [i for i in words if i != 'comment']
-	
-	print(words)
 
 	try:
-    		checkIdentifierInitialization("static", words)
-		getSym(words)
+		if precompileChecks(words) == 1:
+			getSym(words)
+		else:
+			print ("terminating...")
 	except:
 		print("Scanning Complete")
 	
+#Before scanning, check for required keywords in java files and fail invalid programs before scanning
+def precompileChecks(words):
+
+	keywords = [['public',0], ['class',0], ['static',0], ['void',0], ['main',0]]
+
+	for i in range(len(keywords)):
+
+		'''if checkIdentifierInitialization("package", words) < 0:
+			print ("invalid program")
+			return -1'''
+
+		key = keywords[i][0]
+		position = checkIdentifierInitialization(key, words)
+
+		#Check that keyword exists in file
+		if position < 0:
+			print ("invalid program - missing keyword")
+			return -1
+		
+		#Check that keywords are in the correct order
+		if i > 0:
+			if position <= keywords[i-1][1]:
+				print ("invalid program - improper definition")
+				return -1
+
+		keywords[i][1] = position
+
+	return 1
 
 #First check if the word is a number. Then check for reserved words, then reserved symbols. If those aren't possibilities, assume an identifier has been reached.
 def getSym(words):
@@ -559,20 +587,16 @@ def checkRelationalOp(words):
 
 def checkIdentifierInitialization(identifier, sentence):
 
-	search(identifier, sentence)
+	return search(identifier, sentence)
 
 #Hashing function used for pattern and text
 def hash(key, M, iType):
-
-	print(key)
 	h = 0
 
 	#For patterns, hash every character
 	if (iType == "pattern"):
 		for j in range (M):
-			print(R, h, key[j], Q)
 			h = (R * h + ord(key[j])) % Q
-			print (h)
 
 	#For text, hash every character of every string
 	elif (iType == "text"):
@@ -581,47 +605,41 @@ def hash(key, M, iType):
 				chars.append(key[k][l])
 
 		for j in range (M):
-			print(R, h, chars[j], Q)
 			h = (R * h + ord(chars[j])) % Q
-			print (h)
 
 	return h
 
 def search(pattern, txt):
 	M = len(pattern)
-	print("Q: ", Q)
 	RM = 1
 
-	print(M)
 	for i in range(1,M):
 		RM = (R * RM) % Q
-		print(RM)
 		
 	#Hash the pattern	
 	patHash = hash(pattern, M, "pattern")
 
 	N = len(txt)
-	print(len(txt))
 
 	#Hash the text
 	txtHash = hash(txt, M, "text")
 
 	#check if the pattern exists at the beginning of the text
 	if (patHash == txtHash):
-		print ("found")
-		return 0
+		print ("Pre-compile check passed - keyword \'" + pattern + "\' present in input file")
+		return 1
 
 	#Cycle through text and compare all strings of same length as the pattern
 	for i in range (M, len(chars)):
 
-		print(i-M+1, i-4, "word to check: ", chars[i-M+1], chars[i-4], chars[i-3], chars[i-2], chars[i-1], chars[i])
+		#print(i-M, i-4, "word to check: ", chars[i-M], chars[i-4], chars[i-3], chars[i-2], chars[i-1], chars[i])
 
 		#remove first character hash and add last character hash
 		txtHash = (txtHash + Q - RM*ord(chars[i-M]) % Q) % Q
 		txtHash = (txtHash*R + ord(chars[i])) % Q
 
 		if (patHash == txtHash):
-			print("found")
+			print ("Pre-compile check passed - keyword \'" + pattern + "\' present in input file")
 			return i - M
 	return -1
 
