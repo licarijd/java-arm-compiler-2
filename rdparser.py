@@ -138,6 +138,16 @@ def method_body(sentence):
     else:
         terminate(True, sentence)
         
+        
+# Counter incrementation     
+def inc_val(sentence):
+    global currentPosition
+
+    if (sentence[currentPosition] == 'PlusSym'):
+        currentPosition+=1
+        if (sentence[currentPosition] == 'PlusSym'):
+            currentPosition+=1
+
 
 def print_statement(sentence):
     global currentPosition
