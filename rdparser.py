@@ -149,6 +149,25 @@ def inc_val(sentence):
             currentPosition+=1
 
 
+def while_loops(sentence)
+    global currentPosition
+
+     if (sentence[currentPosition] == 'WhileSym'):
+        currentPosition+=1
+        if (sentence[currentPosition] == 'LbrakSym'):
+            currentPosition+=1
+            compound_statement(sentence)
+            if (sentence[currentPosition] == 'RCurlSym'):
+                currentPosition+=1
+                return True
+            else:
+                terminate(False, sentence[currentPosition])
+        else:
+            terminate(False, sentence[currentPosition])
+    else:
+        terminate(False, sentence[currentPosition])
+
+
 def print_statement(sentence):
     global currentPosition
 
