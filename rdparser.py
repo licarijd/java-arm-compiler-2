@@ -147,9 +147,14 @@ def inc_val(sentence):
         currentPosition+=1
         if (sentence[currentPosition] == 'PlusSym'):
             currentPosition+=1
+            return True
+        else:
+            terminate(False, sentence[currentPosition]) 
+    else:
+        terminate(False, sentence[currentPosition])
 
 
-def while_loops(sentence)
+def while_loop(sentence):
     global currentPosition
 
      if (sentence[currentPosition] == 'WhileSym'):
@@ -167,6 +172,20 @@ def while_loops(sentence)
     else:
         terminate(False, sentence[currentPosition])
 
+
+def compound_statement(sentence):
+    global currentPosition
+
+    if (sentence[currentPosition] == 'IdentSym' or sentence[currentPosition] == 'NumberSym' ):
+        currentPosition+=1
+        if (sentence[currentPosition] == 'NeqSym' or sentence[currentPosition] == 'GeqSym' or sentence[currentPosition] == 'LeqSym' or sentence[currentPosition] == 'LssSym' or sentence[currentPosition] == 'GtrSym' or sentence[currentPosition] == 'EqlSym'):
+            if (sentence[currentPosition] == 'IdentSym' or sentence[currentPosition] == 'NumberSym' ):
+                currentPosition+=1
+                return True
+            else:
+            terminate(False, sentence[currentPosition])
+    else:
+        terminate(False, sentence[currentPosition])
 
 def print_statement(sentence):
     global currentPosition
