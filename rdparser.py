@@ -132,9 +132,17 @@ def method_body(sentence):
     if (currentPosition < len(sentence)):
         if (sentence[currentPosition == 'StringSym']) or (sentence[currentPosition == 'DoubleSym']) or (sentence[currentPosition == 'BooleanSym']):
             assignment_call(sentence)
-            return True 
-    if (currentPosition < len(sentence)):
-        if (sentence[currentPosition] == 'SystemSym') and (sentence[currentPosition+2] == 'OutSym'):
+            return True
+        elif (sentence[currentPosition] == 'IfSym']):
+            if_statement(sentence)
+            return True
+        elif(sentence[currentPosition] == 'WhileSym']):
+            while_loop(sentence)
+            return True
+        elif(sentence[currentPosition] == 'ForSym']):
+            for_loop(sentence)
+            return True
+        elif (sentence[currentPosition] == 'SystemSym') and (sentence[currentPosition+2] == 'OutSym'):
             print_statement(sentence)
             return True
         elif (sentence[currentPosition] == 'SystemSym') and (sentence[currentPosition+2] == 'ExitSym'):
@@ -143,90 +151,6 @@ def method_body(sentence):
     else:
         terminate(True, sentence)
         
-        
-# Counter incrementation     
-def inc_val(sentence):
-    global currentPosition
-
-    if (sentence[currentPosition] == 'PlusSym'):
-        currentPosition+=1
-        if (sentence[currentPosition] == 'PlusSym'):
-            currentPosition+=1
-            return True
-        else:
-            terminate(False, sentence[currentPosition]) 
-    else:
-        terminate(False, sentence[currentPosition])
-
-def if_statement(sentence):
-    global currentPosition
-
-    if (sentence[currentPosition] == 'IfSym'):
-        currentPosition+=1
-        if (sentence[currentPosition] == 'LbrakSym'):
-            currentPosition+=1
-            compound_statement(sentence)
-            if (sentence[currentPosition] == 'RCurlSym'):
-                currentPosition+=1
-                return True
-            else:
-                terminate(False, sentence[currentPosition])
-        else:
-            terminate(False, sentence[currentPosition])
-    else:
-        terminate(False, sentence[currentPosition])
-
-def for_loop(sentence):
-    global currentPosition
-
-    if (sentence[currentPosition] == 'ForSym'):
-        currentPosition+=1
-        if (sentence[currentPosition] == 'LbrakSym'):
-            currentPosition+=1
-            compound_statement(sentence)
-            if (sentence[currentPosition] == 'RCurlSym'):
-                currentPosition+=1
-                return True
-            else:
-                terminate(False, sentence[currentPosition])
-        else:
-            terminate(False, sentence[currentPosition])
-    else:
-        terminate(False, sentence[currentPosition])
-
-
-def while_loop(sentence):
-    global currentPosition
-
-     if (sentence[currentPosition] == 'WhileSym'):
-        currentPosition+=1
-        if (sentence[currentPosition] == 'LbrakSym'):
-            currentPosition+=1
-            compound_statement(sentence)
-            if (sentence[currentPosition] == 'RCurlSym'):
-                currentPosition+=1
-                return True
-            else:
-                terminate(False, sentence[currentPosition])
-        else:
-            terminate(False, sentence[currentPosition])
-    else:
-        terminate(False, sentence[currentPosition])
-
-
-def compound_statement(sentence):
-    global currentPosition
-
-    if (sentence[currentPosition] == 'IdentSym' or sentence[currentPosition] == 'NumberSym' ):
-        currentPosition+=1
-        if (sentence[currentPosition] == 'NeqSym' or sentence[currentPosition] == 'GeqSym' or sentence[currentPosition] == 'LeqSym' or sentence[currentPosition] == 'LssSym' or sentence[currentPosition] == 'GtrSym' or sentence[currentPosition] == 'EqlSym'):
-            if (sentence[currentPosition] == 'IdentSym' or sentence[currentPosition] == 'NumberSym' ):
-                currentPosition+=1
-                return True
-            else:
-            terminate(False, sentence[currentPosition])
-    else:
-        terminate(False, sentence[currentPosition])
 
 def assignment_call(sentence):
     if (sentence[currentPosition == 'StringSym']):
@@ -362,6 +286,7 @@ def assignment_call(sentence):
         
     else:
         terminate(False, sentence[currentPosition])
+                
 
 def print_statement(sentence):
     global currentPosition
@@ -407,7 +332,76 @@ def print_statement(sentence):
             terminate(False, sentence[currentPosition])
     else:
         terminate(False, sentence[currentPosition])
-   
+
+def for_loop(sentence):
+    global currentPosition
+
+    if (sentence[currentPosition] == 'ForSym'):
+        currentPosition+=1
+        if (sentence[currentPosition] == 'LbrakSym'):
+            currentPosition+=1
+            compound_statement(sentence)
+            if (sentence[currentPosition] == 'RCurlSym'):
+                currentPosition+=1
+                return True
+            else:
+                terminate(False, sentence[currentPosition])
+        else:
+            terminate(False, sentence[currentPosition])
+    else:
+        terminate(False, sentence[currentPosition])
+
+def while_loop(sentence):
+    global currentPosition
+
+    if (sentence[currentPosition] == 'WhileSym'):
+        currentPosition+=1
+        if (sentence[currentPosition] == 'LbrakSym'):
+            currentPosition+=1
+            compound_statement(sentence)
+            if (sentence[currentPosition] == 'RCurlSym'):
+                currentPosition+=1
+                return True
+            else:
+                terminate(False, sentence[currentPosition])
+        else:
+            terminate(False, sentence[currentPosition])
+    else:
+        terminate(False, sentence[currentPosition])
+
+def compound_statement(sentence):
+    global currentPosition
+
+    if (sentence[currentPosition] == 'IdentSym' or sentence[currentPosition] == 'NumberSym' ):
+        currentPosition+=1
+        if (sentence[currentPosition] == 'NeqSym' or sentence[currentPosition] == 'GeqSym' or sentence[currentPosition] == 'LeqSym' or sentence[currentPosition] == 'LssSym' or sentence[currentPosition] == 'GtrSym' or sentence[currentPosition] == 'EqlSym'):
+            if (sentence[currentPosition] == 'IdentSym' or sentence[currentPosition] == 'NumberSym' ):
+                currentPosition+=1
+                return True
+            else:
+                terminate(False, sentence[currentPosition])
+    else:
+        terminate(False, sentence[currentPosition])
+
+def if_statement(sentence):
+    global currentPosition
+
+    if (sentence[currentPosition] == 'IfSym'):
+        currentPosition+=1
+        if (sentence[currentPosition] == 'LbrakSym'):
+            currentPosition+=1
+            compound_statement(sentence)
+            if (sentence[currentPosition] == 'RCurlSym'):
+                currentPosition+=1
+                return True
+            else:
+                terminate(False, sentence[currentPosition])
+        else:
+            terminate(False, sentence[currentPosition])
+    else:
+        terminate(False, sentence[currentPosition])
+
+
 def end_prog(sentence):
     global currentPosition
     print("endprog")
@@ -446,7 +440,7 @@ def end_prog(sentence):
         terminate(False, sentence[currentPosition])
         
 def identifier():
-    print "incomplete"
+    print("incomplete")
 
 def terminate(res, current):
     global currentPosition
