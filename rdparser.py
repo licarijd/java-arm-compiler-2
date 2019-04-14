@@ -2,7 +2,8 @@
 #IMPORTS --> 'import' IDENTIFIER
 #CLASS_DECLARATION --> 'public class' IDENTIFIER '{' MAIN_METHOD_DECLARATION '}'
 #MAIN_METHOD_DECLARATION --> 'public \. static \. void \. main (String[] args) {' METHOD_BODY '}'
-#METHOD_BODY --> PRINT_STATEMENT | EXIT_STATEMENT | ARITHMETIC_STATEMENT
+#METHOD_BODY --> ASSIGNMENT_CALL | PROCEDURE_CALL | PRINT_STATEMENT | EXIT_STATEMENT | ARITHMETIC_STATEMENT
+#ASSIGNMENT_CALL -> 'String' IDENTIFIER | 'String[]' IDENTIFER |  'boolean' IDENTIFER | 'double' IDENTIFIER 
 #PRINT_STATEMENT --> 'System.out.println(' ( IDENTIFIER ' ' \+ )+ ';'
 #ARITHMETIC_STATEMENT --> 'System.out.println(' ( IDENTIFIER ' ' \+ )+ ';'
 #EXIT_STATEMENT --> 'System.exit(0)' ';'
@@ -129,6 +130,10 @@ def method_body(sentence):
     global currentPosition
 
     if (currentPosition < len(sentence)):
+        if (sentence[currentPosition == 'StringSym']) or (sentence[currentPosition == 'DoubleSym']) or (sentence[currentPosition == 'BooleanSym']):
+            assignment_call(sentence)
+            return True 
+    if (currentPosition < len(sentence)):
         if (sentence[currentPosition] == 'SystemSym') and (sentence[currentPosition+2] == 'OutSym'):
             print_statement(sentence)
             return True
@@ -150,6 +155,42 @@ def inc_val(sentence):
             return True
         else:
             terminate(False, sentence[currentPosition]) 
+    else:
+        terminate(False, sentence[currentPosition])
+
+def if_statement(sentence):
+    global currentPosition
+
+    if (sentence[currentPosition] == 'IfSym'):
+        currentPosition+=1
+        if (sentence[currentPosition] == 'LbrakSym'):
+            currentPosition+=1
+            compound_statement(sentence)
+            if (sentence[currentPosition] == 'RCurlSym'):
+                currentPosition+=1
+                return True
+            else:
+                terminate(False, sentence[currentPosition])
+        else:
+            terminate(False, sentence[currentPosition])
+    else:
+        terminate(False, sentence[currentPosition])
+
+def for_loop(sentence):
+    global currentPosition
+
+    if (sentence[currentPosition] == 'ForSym'):
+        currentPosition+=1
+        if (sentence[currentPosition] == 'LbrakSym'):
+            currentPosition+=1
+            compound_statement(sentence)
+            if (sentence[currentPosition] == 'RCurlSym'):
+                currentPosition+=1
+                return True
+            else:
+                terminate(False, sentence[currentPosition])
+        else:
+            terminate(False, sentence[currentPosition])
     else:
         terminate(False, sentence[currentPosition])
 
@@ -184,6 +225,141 @@ def compound_statement(sentence):
                 return True
             else:
             terminate(False, sentence[currentPosition])
+    else:
+        terminate(False, sentence[currentPosition])
+
+def assignment_call(sentence):
+    if (sentence[currentPosition == 'StringSym']):
+        currentPosition+=1
+        if (sentence[currentPosition == 'ArraySym']):
+            currentPosition+=1
+            while (sentence[currentPosition] == 'IdentSym'):
+                currentPosition+=1
+            if (sentence[currentPosition == 'SemicolonSym']):
+                currentPosition+=1
+                print("ttt")
+                print(SC.args)
+                CG.genPrintStatement(SC.args)
+                #terminate(True, sentence)
+                method_body(sentence)
+            if (sentence[currentPosition+1 == 'EqualSym']):
+                currentPosition+=2
+                while (sentence[currentPosition] == 'IdentSym'):
+                    currentPosition+=1
+                if (sentence[currentPosition == 'SemicolonSym']):
+                    currentPosition+=1
+                    print("ttt")
+                    print(SC.args)
+                    CG.genPrintStatement(SC.args)
+                    #terminate(True, sentence)
+                    method_body(sentence)
+                else:
+                    terminate(False, sentence[currentPosition])
+            else:
+                terminate(False, sentence[currentPosition])
+
+        while (sentence[currentPosition] == 'IdentSym'):
+            currentPosition+=1
+            if (sentence[currentPosition == 'PeriodSym'):
+                currentPosition+=1
+                while (sentence[currentPosition] == 'IdentSym'):
+                currentPosition+=1
+                if (sentence[currentPosition] == 'LparentSym'):
+                    currentPosition+=1
+                    if (sentence[currentPosition] == 'RparentSym'):
+                        currentPosition+=1
+                        if (sentence[currentPosition == 'SemicolonSym']):
+                            currentPosition+=1
+                            print("ttt")
+                            print(SC.args)
+                            CG.genPrintStatement(SC.args)
+                            #terminate(True, sentence)
+                            method_body(sentence)
+                        else:
+                            terminate(False, sentence[currentPosition])
+                    else:
+                        terminate(False, sentence[currentPosition])
+                else:
+                    terminate(False, sentence[currentPosition])
+            if (sentence[currentPosition == 'SemicolonSym']):
+                currentPosition+=1
+                print("ttt")
+                print(SC.args)
+                CG.genPrintStatement(SC.args)
+                #terminate(True, sentence)
+                method_body(sentence)
+            if (sentence[currentPosition+2 == 'EqualSym']):
+                currentPosition+=2
+                while (sentence[currentPosition] == 'IdentSym'):
+                    currentPosition+=1
+                if (sentence[currentPosition == 'SemicolonSym']):
+                    currentPosition+=1
+                    print("ttt")
+                    print(SC.args)
+                    CG.genPrintStatement(SC.args)
+                    #terminate(True, sentence)
+                    method_body(sentence)
+                else:
+                    terminate(False, sentence[currentPosition])
+            else:
+                terminate(False, sentence[currentPosition])
+            
+        else:
+            terminate(False, sentence[currentPosition])
+    if(sentence[currentPosition == 'BooleanSym']):
+        currentPosition+=1
+        while (sentence[currentPosition] == 'IdentSym'):
+            currentPosition+=1
+        if (sentence[currentPosition+2 == 'EqualSym']):
+            currentPosition+=2
+            while (sentence[currentPosition] == 'IdentSym'):
+                currentPosition+=1
+            if (sentence[currentPosition == 'SemicolonSym']):
+                currentPosition+=1
+                print("ttt")
+                print(SC.args)
+                CG.genPrintStatement(SC.args)
+                #terminate(True, sentence)
+                method_body(sentence)
+            else:
+                terminate(False, sentence[currentPosition])
+        else:
+            terminate(False, sentence[currentPosition])
+    if(sentence[currentPosition == 'DoubleSym']):
+        currentPosition+=1
+        while (sentence[currentPosition] == 'IdentSym'):
+            currentPosition+=1
+            if (sentence[currentPosition == 'PeriodSym'):
+                currentPosition+=1
+                while (sentence[currentPosition] == 'IdentSym'):
+                currentPosition+=1
+                if (sentence[currentPosition] == 'LparentSym'):
+                    currentPosition+=1
+                    if (sentence[currentPosition] == 'RparentSym'):
+                        currentPosition+=1
+                        if (sentence[currentPosition == 'SemicolonSym']):
+                            currentPosition+=1
+                            print("ttt")
+                            print(SC.args)
+                            CG.genPrintStatement(SC.args)
+                            #terminate(True, sentence)
+                            method_body(sentence)
+                        else:
+                            terminate(False, sentence[currentPosition])
+                    else:
+                        terminate(False, sentence[currentPosition])
+                else:
+                    terminate(False, sentence[currentPosition])
+        if (sentence[currentPosition == 'SemicolonSym']):
+            currentPosition+=1
+            print("ttt")
+            print(SC.args)
+            CG.genPrintStatement(SC.args)
+            #terminate(True, sentence)
+            method_body(sentence)
+        else:
+            terminate(False, sentence[currentPosition])
+        
     else:
         terminate(False, sentence[currentPosition])
 
