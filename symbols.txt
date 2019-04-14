@@ -8,6 +8,8 @@ VoidSym
 MainSym
 LparenSym
 StringSym
+DoubleSym
+BooleanSym
 ArraySym
 ArgsSym
 RparenSym
@@ -28,7 +30,11 @@ ExitSym
 LparenSym
 IdentSym
 RparenSym
+EqualSym
 SemicolonSym
 RCurlSym
 RCurlSym
 EofSym
+WhileSym
+IfSym
+ForSym
